@@ -1,14 +1,41 @@
+/* eslint-disable no-undef */
 const express = require("express");
 const router = express.Router();
+const path = require("path");
 
-const { signupHandler, loginHandler } = require("../handlers/authHandler");
+const { corsAccess } = require("../middlewares/cors");
+const { authorization } = require("../middlewares/authorization");
+const multer = require("../middlewares/multer");
 
-router.post("/auth/signup", (req, res) => {
-  signupHandler(req, res);
-});
+const { signupHandler, loginHandler } = require("../controllers/authHandler");
+const {
+  sauceListHandler,
+  sauceHandler,
+  newSauceHandler,
+  sauceUpdateHandler,
+  sauceDeleteHandler,
+  sauceLikeHandler,
+} = require("../controllers/saucesHandler");
 
-router.post("/auth/login", (req, res) => {
-  loginHandler(req, res);
-});
+router.use(express.json());
+router.use(corsAccess);
+
+router.use("/images", express.static(path.join(__dirname, "../images")));
+
+router.post("/auth/signup", signupHandler);
+
+router.post("/auth/login", loginHandler);
+
+router.get("/sauces", authorization, sauceListHandler);
+
+router.post("/sauces", authorization, multer, newSauceHandler);
+
+router.get("/sauces/:id", authorization, sauceHandler);
+
+router.put("/sauces/:id", authorization, multer, sauceUpdateHandler);
+
+router.delete("/sauces/:id", authorization, sauceDeleteHandler);
+
+router.post("/sauces/:id/like", authorization, sauceLikeHandler);
 
 module.exports = router;

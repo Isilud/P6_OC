@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const mongodbErrorHandler = require("mongoose-mongodb-errors");
+const mongodbErrorHandler = require("mongoose-unique-validator");
 
 const client = mongoose.Schema({
   email: { type: String, required: true, unique: true },
