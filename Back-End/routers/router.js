@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 const express = require("express");
 const router = express.Router();
-const path = require("path");
 
 const { corsAccess } = require("../middlewares/cors");
 const { authorization } = require("../middlewares/authorization");
@@ -19,8 +18,6 @@ const {
 
 router.use(express.json());
 router.use(corsAccess);
-
-router.use("/images", express.static(path.join(__dirname, "../images")));
 
 router.post("/auth/signup", signupHandler);
 

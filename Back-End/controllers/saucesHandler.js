@@ -1,4 +1,3 @@
-// const Client = require("../models/client");
 const Sauce = require("../models/sauce");
 const fs = require("fs");
 
@@ -49,9 +48,6 @@ const sauceUpdateHandler = (req, res) => {
     sauce = req.body;
   }
   delete sauce.userId;
-  console.log(sauce);
-  console.log(req.params.id);
-  console.log(req.auth.userId);
   Sauce.findOne({ _id: req.params.id })
     .then((data) => {
       if (data.userId != req.auth.userId) {
