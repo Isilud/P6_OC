@@ -1,4 +1,9 @@
-const { crypt, decrypt, newToken } = require("../utils/security");
+const {
+  crypt,
+  decrypt,
+  newToken,
+  checkPassword,
+} = require("../utils/security");
 
 const Client = require("../models/client");
 
@@ -7,6 +12,13 @@ const signupHandler = async (req, res) => {
   const client = new Client({
     ...req.body,
   });
+  if (!checkPassword(client.password)) {
+    let error = new Error(
+      "Le mot de passe doit avoir une majuscule, une minuscule, un chiffre et ne doit pas contenir d'espace."
+    );
+    res.status(400).json({ error: error.message });
+    return;
+  }
   const hash = await crypt(client.password);
   client.password = hash;
   client
@@ -33,7 +45,8 @@ const loginHandler = async (req, res) => {
       token: newToken(data._id),
     });
   } else {
-    res.status(400).json(Error("Mauvais mot de passe."));
+    const error = Error("Mauvais mot de passe.");
+    res.status(400).json({ error: error.message });
   }
 };
 
